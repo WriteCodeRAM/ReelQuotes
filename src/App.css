@@ -162,3 +162,25 @@ textarea {
 
 }
 
+
+ul, li{
+  list-style: none;
+}
+
+li{
+  border: solid 1px #ffba08;
+  padding: 8px;
+}
+
+li:hover{
+  background-color: #3041a1;
+  transition: 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+
+
+/* Rest of your existing styles for input, button, etc. */
+
+/* Rest of your existing styles for input, button, etc. */
+

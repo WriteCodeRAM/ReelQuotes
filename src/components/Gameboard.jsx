@@ -1,13 +1,19 @@
 import React from "react"
 import playBtn from '../images/playBtn.png'
 import Searchbar from "./Searchbar"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 
 
 const Gameboard = ({maybe}) => { 
 
     const [quote, setQuote] = useState("Quotes will appear here.")
+
+    useEffect(() => { 
+        async function GetQuotes(){ 
+            
+        }
+    })
 
 
     return (
