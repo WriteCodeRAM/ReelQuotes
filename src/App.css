@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700&display=swap');
+
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  /* padding: 2rem; */
+  text-align: center;
+}
+
+body{
+  background-color: #03071e;
+  color: #fff;
+  font-family: 'Josefin Sans', 'sans-serif';
+}
+
+nav{
+  display: flex;
+  justify-content: space-between;
+  border-bottom: solid 2px #fff;
+  align-items: center;
+  
+}
+
+nav button{
+  background-color: #050c30;
+margin-bottom: 12px;
+height: fit-content;
+padding: 8px;
+
+}
+
+button:hover{
+  cursor: pointer;
+  box-shadow: 0 0 5px 5px rgba(255, 186, 8, 0.6);
+  transition: 0.25s ease-in-out;
+}
+
+button img{
+  height: 30px;
+
+}
+
+.logo-text{
+  font-size: 36px; 
+  margin-right: -40px;
+}
+
+span{
+  color: #ffba08;
+}
+
+.logo-img{
+
+  width: 120px;
+
+}
+
+.logo-container{
+  display: flex;
+  align-items: center;
+}
+
+
+.playBtn-container{
+  background-color: #ffba08;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: fit-content;
+  width: fit-content;
+  font-weight: 100px;
+  border-radius: 33%;
+  padding: 12px;
+
+  margin-top: 50px;
+
+} 
+
+
+.game-container{
+  display: flex;
+  height: 70vh;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+}
+
+.quote-container{
+  width: 700px;
+  height: 250px;
+  background-color: #050c30;
+  border: solid 1px #050c30;
+  border-radius: 8px;
+  display: flex;
+  padding: 12px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.quote{
+  line-height: 1.5;
+  font-weight: 200;
+  font-size: 18px;
+}
+
+.playBtn-container:hover{
+  cursor: pointer;
+  box-shadow: 0 0 5px 5px rgba(255, 255, 255, 0.8);
+  transition: 0.2s ease-in-out;
+
+
+
+
+}
+
+.playBtn{
+
+
+}
+
+input{
+  min-height: 40px;
+  width: 643px;
+  border: solid 2px #999999;
+  border-radius: 8px;
+  padding: 8px;
+
+}
+
+input::placeholder {
+  color: #999999; /* Change the color */
+
+  font-size: 14px; /* Change the font size */
+  /* Add any other desired styling properties */
+  font-family: 'Josefin Sans';
+}
+
+
+input[type="text"],
+textarea {
+  font-family: "Josefin Sans", sans-serif;
+  font-size: larger;
+
+}
+
+
+
+.submit-form{
+  display: flex;
+  flex-direction: column;
+
+}
+
+.submitBtn{
+  border: solid 2px #999999;
+  border-left: none;
+  margin-right: 12px;
+  border-radius: 8px;
+
+}
+
