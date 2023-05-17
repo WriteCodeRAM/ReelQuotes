@@ -98,7 +98,12 @@ span{
   align-items: center;
   justify-content: center;
   flex-direction: column;
+
 }
+
+
+
+
 
 .quote{
   line-height: 1.5;
@@ -116,10 +121,6 @@ span{
 
 }
 
-.playBtn{
-
-
-}
 
 input{
   min-height: 40px;
@@ -180,7 +181,4 @@ li:hover{
 
 
 
-/* Rest of your existing styles for input, button, etc. */
-
-/* Rest of your existing styles for input, button, etc. */
 
