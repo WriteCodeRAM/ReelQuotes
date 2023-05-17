@@ -3,11 +3,13 @@ import playBtn from '../images/playBtn.png';
 import pauseBtn from '../images/pause.png';
 import Searchbar from "./Searchbar";
 import { supabase } from "../client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const Gameboard = () => {
   const [quote, setQuote] = useState(null);
   const [quotes, setQuotes] = useState([]);
+  const [poster, setPoster] = useState(null);
+  const [answer, setAnswer] = useState('')
   const [num, setNum] = useState(0);
   const [loading, setLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -19,6 +21,7 @@ const Gameboard = () => {
       const { data } = await supabase.from('Quotes').select('*');
       setQuotes(data.slice(0, 3));
       setQuote(data[num]?.quote || "No quotes found");
+      setAnswer(data[num].movie + ' ' + '(' + data[num].release_date + ')')
       handleAudioToggle();
     } catch (error) {
       console.error(error);
@@ -27,9 +30,17 @@ const Gameboard = () => {
     }
   };
 
+  useEffect(() => {
+    if (quote) {
+      setAnswer(quotes[num]?.movie + ' ' + '(' + quotes[num]?.release_date.slice(0, 4) + ')');
+    }
+  }, [quote]);
+
   const handleNextQuote = () => {
     setNum(num + 1);
     setQuote(quotes[num + 1]?.quote || "No quotes found");
+    setAnswer(data[num + 1]?.movie + ' ' + '(' + data[num+1]?.release_date + ')')
+
   };
 
   const handleAudioToggle = () => {
@@ -70,7 +81,7 @@ const Gameboard = () => {
         )}
       </div>
 
-      <Searchbar />
+      <Searchbar answer={answer} poster={poster} />
     </div>
   );
 };
