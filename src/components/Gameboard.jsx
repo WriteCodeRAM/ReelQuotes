@@ -13,10 +13,12 @@ const Gameboard = () => {
   const [num, setNum] = useState(0);
   const [loading, setLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [active, setActive] = useState(false)
   const audioRef = useRef(null);
 
   const handlePlayClick = async () => {
     setLoading(true);
+    setActive(true)
     try {
       const { data } = await supabase.from('Quotes').select('*');
       setQuotes(data.slice(0, 3));
@@ -80,8 +82,11 @@ const Gameboard = () => {
           <audio ref={audioRef} src={quotes[num]?.audio}></audio>
         )}
       </div>
+      {active && (
 
+      
       <Searchbar answer={answer} poster={poster} />
+)}
     </div>
   );
 };

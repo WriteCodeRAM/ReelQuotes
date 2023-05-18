@@ -22,7 +22,6 @@ const Searchbar = ({ answer }) => {
           `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=en-US&page=1&include_adult=false&query=${input}`
         );
         setMovies(res.data.results.slice(0, 5));
-        console.log(res.data)
       } catch (error) {
         console.error(error);
       }
@@ -35,35 +34,54 @@ const Searchbar = ({ answer }) => {
     setInput(e.target.value);
   };
 
-  const handleMovieClick = async (title, date, movieId) => {
+  const handleMovieClick = async (title, date) => {
     setInput(title + ' ' + '(' + date.slice(0, 4) + ')');
-    
+    const movieName = answer.substring(0, answer.indexOf('(')).trim();
+
     try {
-      const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`);
-      const posterPath = response.data.poster_path;
-      const imageUrl = `https://image.tmdb.org/t/p/w500${posterPath}`;
-      setPoster(imageUrl);
+      const response = await axios.get(
+        `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=en-US&page=1&include_adult=false&query=${encodeURIComponent(movieName)}`
+      );
+  
+      if (response.data.results.length > 0) {
+        const movie = response.data.results[0];
+        const posterPath = movie.poster_path;
+        const imageUrl = `https://image.tmdb.org/t/p/w500${posterPath}`;
+        setPoster(imageUrl);
+      }
     } catch (error) {
       console.error(error);
     }
   };
   
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    
     e.preventDefault();
     if (input === answer) {
-      setSymbol(correctSymbol);
-      setTitle(answer);
-      console.log(poster)
-    } else {
-      setSymbol(wrongSymbol);
-      setTitle(answer);
-      console.log(poster)
-
+      try {
+        const movieName = answer.substring(0, answer.indexOf('(')).trim();
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=en-US&page=1&include_adult=false&query=${movieName}`
+        );
+          console.log(response)
+        if (response.data.results.length > 0) {
+          const movie = response.data.results[0];
+          const posterPath = movie.poster_path;
+          const imageUrl = `https://image.tmdb.org/t/p/w500${posterPath}`;
+          setPoster(imageUrl);
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
+  
+    setSymbol(input === answer ? correctSymbol : wrongSymbol);
+    setTitle(answer);
     setIsOpen(true);
   };
-
+  
+  
   const handleCloseModal = () => {
     setIsOpen(false);
   };
