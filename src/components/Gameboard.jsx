@@ -6,57 +6,76 @@ import { supabase } from "../client";
 import { useState, useRef, useEffect } from "react";
 
 const Gameboard = () => {
-  const [quote, setQuote] = useState(null);
+  const [quote, setQuote] = useState('');
   const [quotes, setQuotes] = useState([]);
-  const [poster, setPoster] = useState(null);
-  const [answer, setAnswer] = useState('')
+  const [answer, setAnswer] = useState('');
+  const [skipped, setSkipped] = useState(false);
   const [num, setNum] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [active, setActive] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false); 
   const audioRef = useRef(null);
 
-  const handlePlayClick = async () => {
-    setLoading(true);
-    setActive(true)
-    try {
-      const { data } = await supabase.from('Quotes').select('*');
-      setQuotes(data.slice(0, 3));
-      setQuote(data[num]?.quote || "No quotes found");
-      setAnswer(data[num].movie + ' ' + '(' + data[num].release_date + ')')
-      handleAudioToggle();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+  useEffect(() => {
+    const handlePlayClick = async () => {
+      try {
+        const { data } = await supabase.from('Quotes').select('*');
+        setQuotes(data.slice(7, 10));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    handlePlayClick();
+  }, []);
+
+
+  const handleNextQuote = () => {
+    // handleSkipped();
+    const nextNum = num + 1;
+    setNum(nextNum);
+    setQuote(quotes[nextNum]?.quote || "No quotes found");
+    setAnswer(quotes[nextNum]?.movie + ' (' + quotes[nextNum]?.release_date + ')');
+  };
+  
+
+  //CURRENT OBJECTIVE IS TO MAKE SURE THE MODAL IS DISPLAYED WHEN THE USER HITS THE SKIP BUTTON 
+  //handleNextQuote in Searchbar is causing unlimited skips
+  //may have to find a new dependency or something
+  //watching out
+  const handleSkipped = () => {
+    setTimeout(() => {
+        setSkipped(true);
+
+    }, 100)
+
+    setSkipped(false)
+
   };
 
   useEffect(() => {
-    if (quote) {
-      setAnswer(quotes[num]?.movie + ' ' + '(' + quotes[num]?.release_date.slice(0, 4) + ')');
-    }
-  }, [quote]);
-
-  const handleNextQuote = () => {
-    setNum(num + 1);
-    setQuote(quotes[num + 1]?.quote || "No quotes found");
-    setAnswer(data[num + 1]?.movie + ' ' + '(' + data[num+1]?.release_date + ')')
-
-  };
+    setIsPlaying(false)
+  }, [num])
+  
 
   const handleAudioToggle = () => {
+    const currentAudio = audioRef.current;
+
+    setQuote(quotes[num]?.quote || "No quotes found");
     if (isPlaying) {
-      audioRef.current.pause();
+      currentAudio.pause();
     } else {
-      audioRef.current.play();
+      currentAudio.play();
     }
     setIsPlaying(!isPlaying);
   };
 
+  useEffect(() => {
+    setAnswer(quotes[num]?.movie + ' ' + '(' + quotes[num]?.release_date + ')');
+    console.log(quotes[num]?.movie + ' ' + '(' + quotes[num]?.release_date + ')')
+  }, [quotes, num]);
+
   return (
     <div className="game-container">
-      <div className="playBtn-container" onClick={handlePlayClick}>
+      <div className="playBtn-container">
         <img
           className="playBtn"
           src={isPlaying ? pauseBtn : playBtn}
@@ -65,28 +84,23 @@ const Gameboard = () => {
         />
       </div>
       <div className="quote-container">
-        {quote ? (
+        {quote !== '' ? (
           <>
             <p className="quote">{quote}</p>
             <div className="gameBtn-container">
-              <button onClick={handleNextQuote} disabled={num === 2}>
+              <button onClick={handleSkipped} disabled={num === 3}>
                 skip
               </button>
             </div>
             <span>Movie {num + 1}/3</span>
           </>
         ) : (
-          <p className="quote">Click the play button to get a quote</p>
+          <p className="quote">Click the play button to start. Make sure your volume 🔊 is up!</p>
         )}
-        {quote && (
-          <audio ref={audioRef} src={quotes[num]?.audio}></audio>
-        )}
+        <audio ref={audioRef} src={quotes[num]?.audio} onEnded={handleAudioToggle}></audio>
       </div>
-      {active && (
-
-      
-      <Searchbar answer={answer} poster={poster} />
-)}
+      {quote !== '' && <Searchbar answer={answer} skipped={skipped} handleNextQuote={handleNextQuote} />
+}
     </div>
   );
 };
