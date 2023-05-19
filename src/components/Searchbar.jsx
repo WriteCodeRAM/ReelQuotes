@@ -4,17 +4,28 @@ import MovieCard from './MovieCard';
 import Modal from './Modal';
 import correctSymbol from '../images/checkmark.png';
 import wrongSymbol from '../images/redX.png';
+import Summary from './Summary';
 
 const API_KEY = '095e721b09eadf6c12c7599553d2d026';
 
-const Searchbar = ({ answer, skipped, handleNextQuote }) => {
+const Searchbar = ({ answer, skipped, handleNextQuote, num, quote }) => {
   const [movies, setMovies] = useState([]);
   const [input, setInput] = useState('');
   const [symbol, setSymbol] = useState(null);
   const [title, setTitle] = useState(null);
   const [poster, setPoster] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [line, setLine] = useState('')
+  const [isSummaryOpen, setSummaryOpen] = useState(false);
+  
+  const [responses, setResponses] = useState(
+  [
+    //set the poster, title, quote, and symbol in an object  
+  
+  ])
+
+
+
+  const [score, setScore] = useState(0)
 
   useEffect(() => {
     async function getSearchResults() {
@@ -70,6 +81,13 @@ const Searchbar = ({ answer, skipped, handleNextQuote }) => {
 
       e.preventDefault();
     }
+
+    const res = 
+    {
+      symbol: symbol,
+      poster: poster, 
+      title : title, 
+    }
   
     console.log(answer)
     try {
@@ -83,16 +101,34 @@ const Searchbar = ({ answer, skipped, handleNextQuote }) => {
         const posterPath = movie.poster_path;
         const imageUrl = `https://image.tmdb.org/t/p/w500${posterPath}`;
         setPoster(imageUrl);
-        
+        res.poster = imageUrl; 
       }
     } catch (error) {
       console.error(error);
     }
+
   
     setSymbol(input === answer ? correctSymbol : wrongSymbol);
+    if(input === answer){
+      res.symbol = correctSymbol
+    }else{
+      res.symbol = wrongSymbol
+    }
+
+    res.title = answer
+    res.quote = quote
     setTitle(answer);
     setIsOpen(true);
+
+
+  
+    if(num < 3){
+
+      handleResponse(res)
+    }
+
     setInput('');
+    console.log(num)
 
 
   
@@ -101,13 +137,26 @@ const Searchbar = ({ answer, skipped, handleNextQuote }) => {
 
   };
   
+  const handleResponse = (res) => {
+
+    setResponses(responses.concat(res))
+
+    console.log(responses)
+  }
   
   const handleCloseModal = () => {
     setIsOpen(false);
 
+    if(num === 2){
+      setSummaryOpen(true)
+    }
       handleNextQuote();
-
+       
   };
+
+  const handleSummaryModalClose = () => {
+    setSummaryOpen(false)
+  }
 
   return (
     <div className="searchbar-container">
@@ -129,7 +178,8 @@ const Searchbar = ({ answer, skipped, handleNextQuote }) => {
         </button>
       </form>
 
-      <Modal symbol={symbol} title={answer} poster={poster} isOpen={isOpen} onClose={handleCloseModal} line={line} />
+      <Modal symbol={symbol} title={answer} poster={poster} isOpen={isOpen} onClose={handleCloseModal} />
+      <Summary isSummaryOpen={isSummaryOpen} onSummaryClose={handleSummaryModalClose} responses={responses} />
     </div>
   );
 };

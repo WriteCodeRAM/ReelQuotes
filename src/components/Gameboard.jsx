@@ -18,7 +18,7 @@ const Gameboard = () => {
     const handlePlayClick = async () => {
       try {
         const { data } = await supabase.from('Quotes').select('*');
-        setQuotes(data.slice(7, 10));
+        setQuotes(data.slice(0, 3));
       } catch (error) {
         console.error(error);
       }
@@ -30,10 +30,16 @@ const Gameboard = () => {
 
   const handleNextQuote = () => {
     // handleSkipped();
+    if(num < 3){
+
+    
     const nextNum = num + 1;
     setNum(nextNum);
     setQuote(quotes[nextNum]?.quote || "No quotes found");
     setAnswer(quotes[nextNum]?.movie + ' (' + quotes[nextNum]?.release_date + ')');
+    } else {
+        //modal summary
+    }
   };
   
 
@@ -92,14 +98,14 @@ const Gameboard = () => {
                 skip
               </button>
             </div>
-            <span>Movie {num + 1}/3</span>
+            <span>Movie {num < 3 ? num + 1 : 3}/3</span>
           </>
         ) : (
           <p className="quote">Click the play button to start. Make sure your volume 🔊 is up!</p>
         )}
         <audio ref={audioRef} src={quotes[num]?.audio} onEnded={handleAudioToggle}></audio>
       </div>
-      {quote !== '' && <Searchbar answer={answer} skipped={skipped} handleNextQuote={handleNextQuote} />
+      {quote !== '' && <Searchbar answer={answer} skipped={skipped} handleNextQuote={handleNextQuote} num={num} quote={quote}/>
 }
     </div>
   );
