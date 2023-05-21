@@ -12,13 +12,14 @@ const Gameboard = () => {
   const [skipped, setSkipped] = useState(false);
   const [num, setNum] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false); 
   const audioRef = useRef(null);
 
   useEffect(() => {
     const handlePlayClick = async () => {
       try {
         const { data } = await supabase.from('Quotes').select('*');
-        setQuotes(data.slice(0, 3));
+        setQuotes(data.filter(x => x.used === false ).slice(0,3));
       } catch (error) {
         console.error(error);
       }
@@ -28,15 +29,26 @@ const Gameboard = () => {
   }, []);
 
 
-  const handleNextQuote = () => {
-    // handleSkipped();
+
+  const handleNextQuote = async () => {
+
     if(num < 3){
+      setIsLoading(true)
+      setQuote('New quote loading :)')
+
+
+      await supabase
+      .from('Quotes')
+      .update({ used: true })
+      .eq('id', quotes[num]?.id);
 
     
     const nextNum = num + 1;
     setNum(nextNum);
     setQuote(quotes[nextNum]?.quote || "No quotes found");
     setAnswer(quotes[nextNum]?.movie + ' (' + quotes[nextNum]?.release_date + ')');
+    setIsLoading(false)
+
     } else {
         //modal summary
     }
@@ -92,7 +104,9 @@ const Gameboard = () => {
       <div className="quote-container">
         {quote !== '' ? (
           <>
+            {isLoading && <div className="loading-animation"> <div className="lds-ripple"><div></div><div></div></div></div>}
             <p className="quote">{quote}</p>
+
             <div className="gameBtn-container">
               <button onClick={handleSkipped} disabled={num === 3}>
                 skip

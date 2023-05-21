@@ -1,10 +1,12 @@
 import hamburger from  '../images/icons8-menu-30.png'
 import settings from '../images/settings.png'
 import logo from '../images/logo.png'
-import React from 'react'
+import {React, useState} from 'react'
+
 
 const Nav = () => {
 
+    const [open, isOpen] = useState(false)
 
     return (
        <nav>
