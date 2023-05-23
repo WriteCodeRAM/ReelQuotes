@@ -22,19 +22,28 @@ const Gameboard = () => {
   useEffect(() => {
     const handlePlayClick = async () => {
       const storedResponses = JSON.parse(localStorage.getItem('GAME_RESPONSES'));
-      if (storedResponses) {
-        setQuotes('');
+      const storedNum = JSON.parse(localStorage.getItem('STORED_NUM'));
+      if (storedResponses && storedNum === 3) {
+        setQuotes([]);
+      } else if (storedNum >= 1 && storedNum < 3) {
+        const filteredData = JSON.parse(localStorage.getItem('FILTERED_DATA'));
+        setQuotes(filteredData);
+        setNum(storedNum);
+        setQuote(filteredData[storedNum - 1].quote);
       } else {
         try {
           const { data } = await supabase.from('Quotes').select('*');
-          const filteredData = data.filter(x => x.used === false ).slice(0,3)
+          const filteredData = data.filter(x => x.used === false).slice(0, 3);
           setQuotes(filteredData);
-          window.localStorage.setItem('FILTERED_DATA', JSON.stringify(filteredData))
+          window.localStorage.setItem('FILTERED_DATA', JSON.stringify(filteredData));
+          window.localStorage.setItem('STORED_NUM', JSON.stringify(num));
+        
         } catch (error) {
           console.error(error);
         }
       }
     };
+    
 
     handlePlayClick();
   }, []);
@@ -45,7 +54,6 @@ const Gameboard = () => {
 
   useEffect(() => {
     const gameIsOverData = JSON.parse(localStorage.getItem("GAME_RESPONSES"));
-    const currentDate = new Date().getDate();
     if (gameIsOverData?.length === 3) {
       setIsSummaryOpen(true)
     }
@@ -55,21 +63,29 @@ const Gameboard = () => {
     if (num < 3) {
       setIsLoading(true);
       setQuote('New quote loading :)');
-
+  
       await supabase
         .from('Quotes')
         .update({ used: true })
         .eq('id', quotes[num]?.id);
-
+  
       const nextNum = num + 1;
       setNum(nextNum);
       setQuote(quotes[nextNum]?.quote || "No quotes found");
       setAnswer(quotes[nextNum]?.movie + ' (' + quotes[nextNum]?.release_date + ')');
       setIsLoading(false);
+  
+      // Save the current state in the SAVED_RESPONSES object in local storage
+      const savedResponses = JSON.parse(localStorage.getItem('SAVED_RESPONSES'));
+      savedResponses.responses = [...savedResponses.responses, { quote: quote, answer: answer }];
+      savedResponses.num = nextNum;
+      localStorage.setItem('SAVED_RESPONSES', JSON.stringify(savedResponses));
     } else {
-      //modal summary
+      // Handle game completion logic here
+      setIsSummaryOpen(true)
     }
   };
+  
   
   const handleSkipped = () => {
     setTimeout(() => {

@@ -17,11 +17,11 @@ const Searchbar = ({ answer, skipped, handleNextQuote, num, quote }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSummaryOpen, setSummaryOpen] = useState(false);
   
-  const [responses, setResponses] = useState(
-  [
-    //set the poster, title, quote, and symbol in an object  
+  const [responses, setResponses] = useState(() => {
+    const storedResponses = JSON.parse(localStorage.getItem('GAME_RESPONSES'));
+    return storedResponses || [];
+  });
   
-  ])
 
 
 
@@ -82,6 +82,8 @@ const Searchbar = ({ answer, skipped, handleNextQuote, num, quote }) => {
       e.preventDefault();
     }
 
+    window.localStorage.setItem('STORED_NUM', num + 1)
+
     const res = 
     {
       symbol: symbol,
@@ -138,13 +140,13 @@ const Searchbar = ({ answer, skipped, handleNextQuote, num, quote }) => {
   };
   
   const handleResponse = (res) => {
-    const checkResponses = window.localStorage.getItem('GAME_RESPONSES')
-    console.log(JSON.parse(checkResponses))
-    // console.log(checkResponses.length)
-    const updatedResponses = [...responses, res];
+    const checkResponses = window.localStorage.getItem('GAME_RESPONSES');
+    const parsedResponses = checkResponses ? JSON.parse(checkResponses) : [];
+    const updatedResponses = [...parsedResponses, res];
     setResponses(updatedResponses);
     window.localStorage.setItem('GAME_RESPONSES', JSON.stringify(updatedResponses));
   };
+  
   
   
   
