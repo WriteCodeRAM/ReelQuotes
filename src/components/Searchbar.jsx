@@ -46,11 +46,11 @@ const Searchbar = ({ answer, skipped, handleNextQuote, num, quote }) => {
     setInput(e.target.value);
   };
 
-//watch out for this one too
+
  useEffect(() => {
   if (skipped) {
     setInput('');
-    console.log('running')
+   
     handleSubmit()
   }
 }, [skipped]);
@@ -138,11 +138,15 @@ const Searchbar = ({ answer, skipped, handleNextQuote, num, quote }) => {
   };
   
   const handleResponse = (res) => {
-
-    setResponses(responses.concat(res))
-
-    console.log(responses)
-  }
+    const checkResponses = window.localStorage.getItem('GAME_RESPONSES')
+    console.log(JSON.parse(checkResponses))
+    // console.log(checkResponses.length)
+    const updatedResponses = [...responses, res];
+    setResponses(updatedResponses);
+    window.localStorage.setItem('GAME_RESPONSES', JSON.stringify(updatedResponses));
+  };
+  
+  
   
   const handleCloseModal = () => {
     setIsOpen(false);
