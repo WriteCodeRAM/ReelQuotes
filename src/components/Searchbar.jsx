@@ -6,6 +6,7 @@ import correctSymbol from '../images/checkmark.png';
 import wrongSymbol from '../images/redX.png';
 import Summary from './Summary';
 
+
 const API_KEY = '095e721b09eadf6c12c7599553d2d026';
 
 const Searchbar = ({ answer, skipped, handleNextQuote, num, quote }) => {

@@ -14,7 +14,6 @@ const Gameboard = () => {
   const [num, setNum] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false); 
   const [isLoading, setIsLoading] = useState(false); 
-  const [gameOver, setIsGameOver] = useState(false);
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
 
   const audioRef = useRef(null);
@@ -48,9 +47,6 @@ const Gameboard = () => {
     handlePlayClick();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("GAME_IS_OVER", JSON.stringify(gameOver));
-  }, [gameOver]);
 
   useEffect(() => {
     const gameIsOverData = JSON.parse(localStorage.getItem("GAME_RESPONSES"));
@@ -59,15 +55,12 @@ const Gameboard = () => {
     }
   }, []);
 
-  const handleNextQuote = async () => {
+  const handleNextQuote =  () => {
     if (num < 3) {
       setIsLoading(true);
       setQuote('New quote loading :)');
-  
-      await supabase
-        .from('Quotes')
-        .update({ used: true })
-        .eq('id', quotes[num]?.id);
+
+     
   
       const nextNum = num + 1;
       setNum(nextNum);
@@ -75,11 +68,7 @@ const Gameboard = () => {
       setAnswer(quotes[nextNum]?.movie + ' (' + quotes[nextNum]?.release_date + ')');
       setIsLoading(false);
   
-      // Save the current state in the SAVED_RESPONSES object in local storage
-      const savedResponses = JSON.parse(localStorage.getItem('SAVED_RESPONSES'));
-      savedResponses.responses = [...savedResponses.responses, { quote: quote, answer: answer }];
-      savedResponses.num = nextNum;
-      localStorage.setItem('SAVED_RESPONSES', JSON.stringify(savedResponses));
+
     } else {
       // Handle game completion logic here
       setIsSummaryOpen(true)
