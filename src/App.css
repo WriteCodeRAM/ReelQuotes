@@ -98,6 +98,7 @@ span{
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  margin: 8px 0;
 
 }
 
@@ -147,22 +148,41 @@ textarea {
 
 }
 
+.skip-btn{
+  border-radius: 8px;
+  padding: 8px;
+  background-color: #3041a1;
+  color: #ff4a08;
+  border: none;
+  /* font-size: 16px; */
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.skip-btn:hover{
+  box-shadow: 0 0 5px 5px rgba(255, 78, 8, 0.6);
+}
 
 
 .submit-form{
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 8px;
 
 }
 
 .submitBtn{
-  border: solid 2px #999999;
-  border-left: none;
-  margin-right: 12px;
   border-radius: 8px;
+  padding: 10px 20px;
+  background-color: #3041a1;
+  color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
 
 }
-
+ /* //===========SEARCH RESULTS================//? */
 
 ul, li{
   list-style: none;
@@ -171,6 +191,7 @@ ul, li{
 li{
   border: solid 1px #ffba08;
   padding: 8px;
+  background-color: #050c30;
 }
 
 li:hover{
@@ -178,6 +199,8 @@ li:hover{
   transition: 0.2s ease-in-out;
   cursor: pointer;
 }
+
+
 
 
 
@@ -279,8 +302,8 @@ li:hover{
 }
 
 .modal-poster-summary {
-  width: 250px;
-  height: 250px;
+  max-width: 270px;
+  max-height: 270px;
   margin-bottom: 10px;
   border-radius: 8px;
   border: solid 2px #03071e;
@@ -399,9 +422,71 @@ padding: 18px;
 }
 
 .error{
-  color: #ffba08;
+  color: #ff4a08;
 }
 
 .normal{
   color: #fff;
+}
+
+.tutorial-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+
+
+.tutorial-btn {
+  border-radius: 8px;
+  padding: 10px 20px;
+  background-color: #3041a1;
+  color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.tutorial-btn:hover {
+  background-color: #050c30;
+}
+
+.tutorial-btn:focus {
+  outline: none;
+}
+
+.close-btn{
+  border-radius: 8px;
+  padding: 10px 20px;
+  background-color: #3041a1;
+  color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+
+.search-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-text {
+  padding-left: 30px; /* Add space for the search icon */
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px; /* Move the icon to the left */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background-image: url('../images/search-icon.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  cursor: pointer;
 }

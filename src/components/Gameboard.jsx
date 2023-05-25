@@ -30,7 +30,7 @@ const Gameboard = () => {
         const filteredData = JSON.parse(localStorage.getItem('FILTERED_DATA'));
         setQuotes(filteredData);
         setNum(storedNum);
-        setQuote(filteredData[storedNum - 1].quote);
+        setQuote(filteredData[storedNum].quote);
       } else {
         try {
           const { data } = await supabase.from('Quotes').select('*');
@@ -39,6 +39,7 @@ const Gameboard = () => {
           setQuotes(filteredData);
           window.localStorage.setItem('FILTERED_DATA', JSON.stringify(filteredData));
           window.localStorage.setItem('STORED_NUM', JSON.stringify(num));
+          window.localStorage.setItem('STORED_SCORE', JSON.stringify(num));
         } catch (error) {
           console.error(error);
         }
@@ -57,14 +58,20 @@ const Gameboard = () => {
 
   const handleNextQuote = () => {
     if (num < 3) {
-      setIsLoading(true);
-      setQuote('New quote loading :)');
+   
 
-      const nextNum = num + 1;
-      setNum(nextNum);
-      setQuote(quotes[nextNum]?.quote || 'No quotes found');
-      setAnswer(quotes[nextNum]?.movie + ' (' + quotes[nextNum]?.release_date + ')');
-      setIsLoading(false);
+        setIsLoading(true);
+        setQuote('New quote loading :)');
+  
+
+      setTimeout(()=> {
+
+        const nextNum = num + 1;
+        setNum(nextNum);
+        setQuote(quotes[nextNum]?.quote || 'No quotes found');
+        setAnswer(quotes[nextNum]?.movie + ' (' + quotes[nextNum]?.release_date + ')');
+        setIsLoading(false);
+      }, 1000)
     } else {
       setIsSummaryOpen(true);
     }
@@ -134,7 +141,7 @@ const Gameboard = () => {
               {localStorage.getItem('GAME_RESPONSES')?.length === 3 ? (
                 <button disabled>skip</button>
               ) : (
-                <button onClick={handleSkipped} disabled={num === 3}>
+                <button onClick={handleSkipped} disabled={num === 3} className='skip-btn'>
                   skip
                 </button>
               )}
