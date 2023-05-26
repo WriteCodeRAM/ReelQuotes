@@ -9,7 +9,7 @@ import Summary from './Summary';
 
 const API_KEY = '095e721b09eadf6c12c7599553d2d026';
 
-const Searchbar = ({ answer, skipped, handleNextQuote, num, quote }) => {
+const Searchbar = ({ answer, skipped, handleNextQuote, num, quote, timer}) => {
   const [movies, setMovies] = useState([]);
   const [input, setInput] = useState('');
   const [symbol, setSymbol] = useState(null);
@@ -21,7 +21,7 @@ const Searchbar = ({ answer, skipped, handleNextQuote, num, quote }) => {
     const storedResponses = JSON.parse(localStorage.getItem('GAME_RESPONSES'));
     return storedResponses || [];
   });
-  const [score, setScore] = useState(0);
+
 
   useEffect(() => {
     async function getSearchResults() {
@@ -77,6 +77,10 @@ const Searchbar = ({ answer, skipped, handleNextQuote, num, quote }) => {
     }
 
     if (input === '' && !skipped) return;
+    if(localStorage.getItem('STORED_NUM') == '3'){
+      window.location.reload();
+      return
+    } 
 
     window.localStorage.setItem('STORED_NUM', num + 1);
 
@@ -89,7 +93,7 @@ const Searchbar = ({ answer, skipped, handleNextQuote, num, quote }) => {
       score: STORED_SCORE, 
     };
 
-    console.log(answer);
+    
     try {
       const movieName = answer.substring(0, answer.indexOf('(')).trim();
       const response = await axios.get(
@@ -110,7 +114,7 @@ const Searchbar = ({ answer, skipped, handleNextQuote, num, quote }) => {
     setSymbol(input === answer ? correctSymbol : wrongSymbol);
     if (input === answer) {
       res.symbol = correctSymbol;
-      res.score = STORED_SCORE + 1
+      res.score = STORED_SCORE + 100
     } else {
       res.symbol = wrongSymbol;
     }
@@ -125,7 +129,7 @@ const Searchbar = ({ answer, skipped, handleNextQuote, num, quote }) => {
     }
 
     setInput('');
-    console.log(num);
+
 
     // handleNextQuote();
   };
@@ -142,7 +146,9 @@ const Searchbar = ({ answer, skipped, handleNextQuote, num, quote }) => {
     setIsOpen(false);
 
     if (num === 2) {
+      window.localStorage.setItem('GAME_OVER', JSON.stringify(true));
       setSummaryOpen(true);
+      
     }
     handleNextQuote();
   };
@@ -175,7 +181,7 @@ const Searchbar = ({ answer, skipped, handleNextQuote, num, quote }) => {
       </form>
 
       <Modal symbol={symbol} title={answer} poster={poster} isOpen={isOpen} onClose={handleCloseModal} />
-      <Summary isSummaryOpen={isSummaryOpen} onSummaryClose={handleSummaryModalClose} responses={responses} />
+      <Summary isSummaryOpen={isSummaryOpen} onSummaryClose={handleSummaryModalClose} responses={responses} timer={timer}/>
     </div>
   );
 };

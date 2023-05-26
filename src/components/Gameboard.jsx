@@ -7,7 +7,7 @@ import { useRef } from 'react';
 import Summary from './Summary';
 import Tutorial from './Tutorial';
 
-const Gameboard = () => {
+const Gameboard = ( {timer}) => {
   const [quote, setQuote] = useState('');
   const [quotes, setQuotes] = useState([]);
   const [answer, setAnswer] = useState('');
@@ -26,6 +26,7 @@ const Gameboard = () => {
       const storedNum = JSON.parse(localStorage.getItem('STORED_NUM'));
       if (storedResponses && storedNum === 3) {
         setQuotes([]);
+        
       } else if (storedNum >= 1 && storedNum < 3) {
         const filteredData = JSON.parse(localStorage.getItem('FILTERED_DATA'));
         setQuotes(filteredData);
@@ -38,6 +39,8 @@ const Gameboard = () => {
 
           setQuotes(filteredData);
           window.localStorage.setItem('FILTERED_DATA', JSON.stringify(filteredData));
+          window.localStorage.setItem('GAME_OVER', JSON.stringify(false));
+
           window.localStorage.setItem('STORED_NUM', JSON.stringify(num));
           window.localStorage.setItem('STORED_SCORE', JSON.stringify(num));
         } catch (error) {
@@ -71,7 +74,7 @@ const Gameboard = () => {
         setQuote(quotes[nextNum]?.quote || 'No quotes found');
         setAnswer(quotes[nextNum]?.movie + ' (' + quotes[nextNum]?.release_date + ')');
         setIsLoading(false);
-      }, 1000)
+      }, 400)
     } else {
       setIsSummaryOpen(true);
     }
@@ -105,7 +108,7 @@ const Gameboard = () => {
 
   useEffect(() => {
     setAnswer(quotes[num]?.movie + ' ' + '(' + quotes[num]?.release_date + ')');
-    console.log(quotes[num]?.movie + ' ' + '(' + quotes[num]?.release_date + ')');
+
   }, [quotes, num]);
 
   const handleUUIDSubmit = (submittedUUID) => {
@@ -148,21 +151,26 @@ const Gameboard = () => {
             </div>
             <span>Movie {num < 3 ? num + 1 : 3}/3</span>
           </>
-        ) : (
+        ) : ( localStorage.getItem('STORED_NUM') !== '3' && (
           <p className="quote">
             Click the play button to start. Make sure your volume{' '}
             <span role="img" aria-label="volume">
               🔊
             </span>{' '}
             is up!
-          </p>
+          </p> )  || (
+          
+          <h3>
+                New game of Reel<span>Quotes</span> available in: <span>{timer}</span>
+              </h3>
+          )
         )}
         <audio ref={audioRef} src={quotes[num]?.audio} onEnded={handleAudioToggle}></audio>
       </div>
-      {quote !== '' && localStorage.getItem('GAME_RESPONSES')?.length !== 3 && (
-        <Searchbar answer={answer} skipped={skipped} handleNextQuote={handleNextQuote} num={num} quote={quote} />
+      {quote !== '' && localStorage.getItem('GAME_RESPONSES')?.length !== 3 && ( 
+      <Searchbar answer={answer} skipped={skipped} handleNextQuote={handleNextQuote} num={num} quote={quote} timer={timer} />
       )}
-      <Summary isSummaryOpen={isSummaryOpen} onSummaryClose={() => setIsSummaryOpen(false)} />
+      <Summary isSummaryOpen={isSummaryOpen} onSummaryClose={() => setIsSummaryOpen(false)} timer={timer} />
     </div>
   );
 };
