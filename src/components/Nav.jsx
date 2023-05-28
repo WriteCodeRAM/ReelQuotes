@@ -4,44 +4,71 @@ import logo from '../images/logo.png';
 import leaderboardIcon from '../images/leaderboard.png';
 import about from '../images/about.png';
 import submit from '../images/submit.png';
-import { React, useState } from 'react';
+import { React, useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import SettingsModal from './SettingsModal';
 
 const Nav = () => {
   const [open, setOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const navRef = useRef();
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleOutsideClick);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, []);
+
+  const handleMenuClick = (event) => {
+    event.stopPropagation(); // Stop event propagation to prevent closing the menu immediately
+    setOpen(!open);
+  };
 
   return (
     <nav>
-      <button onClick={() => setOpen(!open)}>
+      <button onClick={handleMenuClick}>
         <img src={hamburger} alt="Menu" />
       </button>
 
-      <ul className={`nav-links ${open ? 'open' : ''}`}>
+      <ul ref={navRef} className={`nav-links ${open ? 'open' : ''}`}>
         <li className="nav-link">
-          <Link to="/about" onClick={()=> setOpen(false)}> About <img src={about} alt="" /></Link>
+          <Link to="/about" onClick={() => setOpen(false)}>
+            {' '}
+            About <img src={about} alt="" />
+          </Link>
         </li>
         <li className="nav-link">
-        <Link to="/leaderboard" onClick={()=> setOpen(false)}>Leaderboard <img src={leaderboardIcon} alt="" /></Link>
+          <Link to="/leaderboard" onClick={() => setOpen(false)}>
+            Leaderboard <img src={leaderboardIcon} alt="" />
+          </Link>
         </li>
         <li className="nav-link">
-        <Link to="/suggest" onClick={()=> setOpen(false)} >Submit Suggestions <img src={submit} alt="" /></Link>
+          <Link to="/suggest" onClick={() => setOpen(false)}>
+            Submit Suggestions <img src={submit} alt="" />
+          </Link>
         </li>
       </ul>
 
-<Link to={'/'}>
-      <div className="logo-container">
-        <h1 className="logo-text">
-          Reel<span>Quotes</span>
-        </h1>
-        <img className="logo-img" src={logo} alt="Logo" />
-      </div>
+      <Link to={'/'}>
+        <div className="logo-container" onClick={() => setOpen(false)}>
+          <h1 className="logo-text">
+            Reel<span>Quotes</span>
+          </h1>
+          <img className="logo-img" src={logo} alt="Logo" />
+        </div>
       </Link>
-      <button className="test">
-        <img src={settings} alt="Settings" />
-        {/* change username
-        can only change username once per month 
-        /Found a bug? submit your findings   */}
+      <button className="test" onClick={() => setSettingsOpen(true)}>
+        <img src={settings} alt="Settings"  />
+        <SettingsModal settingsOpen={settingsOpen} setSettingsOpen={setSettingsOpen} />
       </button>
+      
     </nav>
   );
 };

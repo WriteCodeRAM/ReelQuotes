@@ -33,7 +33,7 @@ function App() {
       const time = calculateTimeLeft();
       setTimer(`${time.hours}:${time.minutes}:${time.seconds}`);
 
-      if (time.hours == '07' && time.minutes == '05' && time.seconds == '20') {
+      if (time.hours == '00' && time.minutes == '00' && time.seconds == '00') {
         const gameScore = JSON.parse(localStorage.getItem('GAME_RESPONSES'));
         let score = 0;
         const filteredData = JSON.parse(localStorage.getItem('FILTERED_DATA'));
@@ -82,9 +82,8 @@ function App() {
     <Routes>
     <Route  path="/home" element={<Gameboard/>} />
     <Route  path="/" element={<Gameboard timer={timer}/>} />
-    
     <Route  path="/about" element={<About/>} />
-    <Route  path="/leaderboard" element={<Leaderboard/>} />
+    <Route  path="/leaderboard" element={<Leaderboard timer={timer}/>} />
     <Route  path="/suggest" element={<Suggestion/>} />
     </Routes>
     </Router>

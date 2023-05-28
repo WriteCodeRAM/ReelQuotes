@@ -7,7 +7,7 @@ import wrongSymbol from '../images/redX.png';
 import searchIcon from '../images/search-icon.png';
 import Summary from './Summary';
 
-const API_KEY = '095e721b09eadf6c12c7599553d2d026';
+const API_KEY = import.meta.env['VITE_TMDB_API_KEY'];
 
 const Searchbar = ({ answer, skipped, handleNextQuote, num, quote, timer}) => {
   const [movies, setMovies] = useState([]);

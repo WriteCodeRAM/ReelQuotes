@@ -1,13 +1,47 @@
-import {React, useState, useEffect} from "react"
-import { supabase } from "../client"
+import React, { useState, useEffect } from "react";
+import { supabase } from "../client";
 
-const Leaderboard = () => {
+const Leaderboard = ({ timer }) => {
+  const [users, setUsers] = useState([]);
 
-    return (
-        <h1>Leaderboard</h1>
-    )
-    
-}
+  useEffect(() => {
+    const getUsers = async () => {
+      const { data } = await supabase
+        .from("Users")
+        .select("*")
+        .order("score", { ascending: false })
+        .gt("score", 0); // Add filter condition to get users with score > 0
 
+      setUsers(data);
+    };
 
-export default Leaderboard
+    getUsers();
+  }, []);
+
+  return (
+    <>
+      <h1>Leaderboard</h1>
+      <p>Scores are updated in <span>{timer}</span></p>
+      <div className="leaderboard">
+        <table>
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user, key) => (
+              <tr key={key}>
+                <td>{user.username}</td>
+                <td>{user.score}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+};
+
+export default Leaderboard;
