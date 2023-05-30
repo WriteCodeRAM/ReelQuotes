@@ -33,7 +33,8 @@ function App() {
       const time = calculateTimeLeft();
       setTimer(`${time.hours}:${time.minutes}:${time.seconds}`);
 
-      if (time.hours == '00' && time.minutes == '00' && time.seconds == '00') {
+      if (time.hours == '21' && time.minutes == '37' && time.seconds == '00') {
+    
         const gameScore = JSON.parse(localStorage.getItem('GAME_RESPONSES'));
         let score = 0;
         const filteredData = JSON.parse(localStorage.getItem('FILTERED_DATA'));
@@ -48,10 +49,37 @@ function App() {
           });
 
           const userUUID = localStorage.getItem('UUID');
+
+         
     
           Promise.all(updatePromises)
             .then(() => {
-              return supabase.from('Users').update({ score: score}).eq('UUID', userUUID);
+              supabase
+  .from('Users')
+  .select('score')
+  .eq('UUID', userUUID)
+  .then((response) => {
+    // Retrieve the current score value
+    const currentScore = response.data[0].score;
+    
+    // Add the local score variable to the current score
+    const updatedScore = currentScore + score;
+    
+    // Update the 'score' column in the Supabase table
+    supabase
+      .from('Users')
+      .update({ score: updatedScore })
+      .eq('UUID', userUUID)
+      .then((response) => {
+        console.log('Score updated successfully');
+      })
+      .catch((error) => {
+        console.error('Error updating score:', error);
+      });
+  })
+  .catch((error) => {
+    console.error('Error retrieving current score:', error);
+  });
             })
             .then(() => {
               // Clear the local storage
@@ -60,7 +88,7 @@ function App() {
               localStorage.removeItem('STORED_NUM');
               localStorage.removeItem('FILTERED_DATA');
               // Reload the page to reset the game
-              window.location.reload();
+              // window.location.reload();
             })
             .catch((error) => {
               console.log(error);

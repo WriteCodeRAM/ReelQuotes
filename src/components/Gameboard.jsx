@@ -161,7 +161,7 @@ const Gameboard = ( {timer}) => {
           </p> )  || (
           
           <h3>
-                New game of Reel<span>Quotes</span> available in: <span>{timer}</span>
+                New game of Reel<span>Quotes</span> in: <span>{timer}</span>
               </h3>
           )
         )}

@@ -6,6 +6,7 @@
   margin: 0 auto;
   /* padding: 2rem; */
   text-align: center;
+  box-sizing: border-box;
 }
 
 body{
@@ -21,6 +22,7 @@ nav {
   justify-content: space-between;
   border-bottom: solid 2px #fff;
   align-items: center;
+
 }
 
 nav button {
@@ -68,23 +70,6 @@ nav button {
   text-decoration: none;
 }
 
-@media (max-width: 768px) {
-  .nav-links {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background-color: #f1f1f1;
-    padding: 0.5rem;
-    margin-top: 0.5rem;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-  }
-
-  .nav-links li {
-    margin-bottom: 0.5rem;
-  }
-}
 
 .nav-link{
   display: flex;
@@ -409,6 +394,8 @@ padding: 18px;
 
 .modal-slot-container{
   display: flex;
+
+  justify-content: center;
 }
 
 
@@ -663,6 +650,7 @@ tr:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 999;
 }
 
 .modal-content-settings {
@@ -683,4 +671,168 @@ tr:hover {
   display: flex;
   align-items: center;
   justify-content: space-around;
+}
+
+
+/* MEDIA QUERIES  */
+
+/* Default styles */
+
+/* Styles for small devices (up to 576px) */
+@media (max-width: 576px) {
+  /* Adjust styles for small screens */
+  nav{
+    width: 100vw;
+    justify-content: space-evenly;
+  }
+
+  .logo-text{
+    font-size: 24px;
+  }
+
+  nav button{
+    margin-bottom: 0;
+  }
+
+  .quote-container{
+    width: 80vw;
+  }
+
+  .input-text{
+    width: 75vw;
+  }
+
+  h2{
+    line-height: 1.5 ;
+  }
+
+  .modal-poster-summary{
+    max-width: 125px;
+    max-height: 125px;
+  }
+  
+ .slot{
+  justify-content: flex-start;
+
+ }
+
+ .modal-quote-summary{
+  padding: 4px;
+ }
+  
+ .modal-symbol-summary{
+  width: 25px;
+  height: 25px;
+}
+
+.modal-content-summary{
+  width: 80vw;
+}
+
+.modal-overlay-summary{
+  align-items: flex-start;
+}
+
+.tutorial-modal, input{
+  width: 80vw;
+}
+
+.tutorial-modal p{
+line-height: 1.2;
+}
+
+h3{
+  line-height: 1.5;
+}
+
+.nav-links.open{
+  width: 90%;
+}
+
+}
+
+/* Styles for medium devices (between 576px and 992px) */
+@media (min-width: 576px) and (max-width: 992px) {
+  /* Adjust styles for medium screens */
+
+  .tutorial-container{
+    height: 75%;
+  }
+
+  .game-container{
+    height: 50vh;
+  }
+
+  .modal-overlay{
+    height: 70%;
+  }
+
+  .modal-overlay-summary{
+    align-items: flex-start;
+  }
+
+  .modal-content-summary{
+    width: 85vw;
+  }
+
+  .slot{
+    justify-content: flex-start;
+  }
+
+  .modal-overlay-settings{
+    height: 70%;
+  }
+ 
+}
+
+/* Styles for large devices (above 992px) */
+@media (min-width: 992px) {
+  /* Adjust styles for large screens */
+body{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-container{
+  height: 80vh;
+}
+ nav{
+  width: 80vw;
+ }
+
+ 
+}
+
+
+/* testsfkmdsk */
+
+
+
+
+@media (max-width: 768px) {
+ 
+  
+  /* Rest of your CSS styles... */
+  
+}
+
+@media (min-width: 280px) and (max-width: 600px) {
+  /* CSS styles for Galaxy Fold */
+ .modal-content-summary{
+  width: 85vw;
+ }
+   .modal-quote-summary{
+    font-size: small;
+   }
+
+   /* h1{
+    font-size: smaller;
+   } */
+
+}
+
+
+.movie-list{
+  padding-left: 0;
 }
