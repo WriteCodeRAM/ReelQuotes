@@ -33,7 +33,7 @@ function App() {
       const time = calculateTimeLeft();
       setTimer(`${time.hours}:${time.minutes}:${time.seconds}`);
 
-      if (time.hours == '21' && time.minutes == '37' && time.seconds == '00') {
+      if (time.hours == '00' && time.minutes == '00' && time.seconds == '00') {
     
         const gameScore = JSON.parse(localStorage.getItem('GAME_RESPONSES'));
         let score = 0;
@@ -71,7 +71,7 @@ function App() {
       .update({ score: updatedScore })
       .eq('UUID', userUUID)
       .then((response) => {
-        console.log('Score updated successfully');
+       
       })
       .catch((error) => {
         console.error('Error updating score:', error);
