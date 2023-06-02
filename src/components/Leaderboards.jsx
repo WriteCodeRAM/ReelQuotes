@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../client";
 
-const Leaderboard = ({ timer }) => {
+const Leaderboard = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const Leaderboard = ({ timer }) => {
   return (
     <>
       <h1>Leaderboard</h1>
-      <p>Scores are updated in <span>{timer}</span></p>
+      
       <div className="leaderboard">
         <table>
           <thead>

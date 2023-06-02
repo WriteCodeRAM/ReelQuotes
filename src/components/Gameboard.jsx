@@ -59,6 +59,8 @@ const Gameboard = ( {timer}) => {
     }
   }, []);
 
+
+
   const handleNextQuote = () => {
     if (num < 3) {
    
@@ -76,7 +78,9 @@ const Gameboard = ( {timer}) => {
         setIsLoading(false);
       }, 400)
     } else {
+     
       setIsSummaryOpen(true);
+      updateScores()
     }
   };
 
@@ -90,6 +94,38 @@ const Gameboard = ( {timer}) => {
   useEffect(() => {
     setIsPlaying(false);
   }, [num]);
+
+  const updateScores = async () => {
+    console.log('entering updateScores')
+    const gameScore = JSON.parse(localStorage.getItem('GAME_RESPONSES'));
+    let score = 0;
+    gameScore.forEach((x) => {
+      score += x.score;
+    });
+    const userUUID = localStorage.getItem('UUID');
+
+    const response = await supabase.from('Users').select('score').eq('UUID', userUUID);
+
+    console.log(response)
+    // Retrieve the current score value
+    const currentScore = response.data[0].score;
+
+    // Add the local score variable to the current score
+    const updatedScore = currentScore + score;
+    console.log(currentScore, updatedScore);
+
+    // Update the 'score' column in the Supabase table
+    await supabase
+      .from('Users')
+      .update({ score: updatedScore })
+      .eq('UUID', userUUID)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error('Error updating score:', error);
+      });
+  };
 
   const handleAudioToggle = () => {
     const test = localStorage.getItem('GAME_RESPONSES');

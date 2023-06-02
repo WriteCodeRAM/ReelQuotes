@@ -6,6 +6,7 @@ import correctSymbol from '../images/checkmark.png';
 import wrongSymbol from '../images/redX.png';
 import searchIcon from '../images/search-icon.png';
 import Summary from './Summary';
+import { supabase } from '../client';
 
 const API_KEY = import.meta.env['VITE_TMDB_API_KEY'];
 
@@ -69,6 +70,38 @@ const Searchbar = ({ answer, skipped, handleNextQuote, num, quote, timer}) => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const updateScores = async () => {
+    console.log('entering updateScores')
+    const gameScore = JSON.parse(localStorage.getItem('GAME_RESPONSES'));
+    let score = 0;
+    gameScore.forEach((x) => {
+      score += x.score;
+    });
+    const userUUID = localStorage.getItem('UUID');
+
+    const response = await supabase.from('Users').select('score').eq('UUID', userUUID);
+
+    console.log(response)
+    // Retrieve the current score value
+    const currentScore = response.data[0].score;
+
+    // Add the local score variable to the current score
+    const updatedScore = currentScore + score;
+    console.log(currentScore, updatedScore);
+
+    // Update the 'score' column in the Supabase table
+    await supabase
+      .from('Users')
+      .update({ score: updatedScore })
+      .eq('UUID', userUUID)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error('Error updating score:', error);
+      });
   };
 
   const handleSubmit = async (e) => {
@@ -148,6 +181,13 @@ const Searchbar = ({ answer, skipped, handleNextQuote, num, quote, timer}) => {
     if (num === 2) {
       window.localStorage.setItem('GAME_OVER', JSON.stringify(true));
       setSummaryOpen(true);
+
+     
+    updateScores()
+
+      
+
+
       
     }
     handleNextQuote();
